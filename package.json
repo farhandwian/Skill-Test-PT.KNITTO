@@ -19,6 +19,7 @@
     "joi": "^17.8.3",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
+    "node_clean_architecture": "file:",
     "redis": "^4.6.10",
     "reflect-metadata": "^0.1.13"
   },
