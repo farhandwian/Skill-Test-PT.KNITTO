@@ -1,5 +1,5 @@
-export { default as IUseCaseInputBoundary } from './i-use-case.input-boundary';
-export { default as IUseCaseOutputBoundary } from './i-use-case.output-boundary';
+export { default as IUseCaseInputBoundary } from "./i-use-case.input-boundary";
+export { default as IUseCaseOutputBoundary } from "./i-use-case.output-boundary";
 export {
   default as IEntityGateway,
   IUsersGateway,
@@ -7,32 +7,34 @@ export {
   IOrdersGateway,
   IImagesGateway,
   EntityGatewayDictionary,
-} from './i-entity-gateway';
+} from "./i-entity-gateway";
 export {
+  ILoginRequestModel,
+  IRegisterRequestModel,
   IUserDetails,
   IAddUserRequestModel,
   IDeleteUserRequestModel,
   IGetUserByIdRequestModel,
-  IUpdateUserRequestModel
-} from './user-request-models';
+  IUpdateUserRequestModel,
+} from "./user-request-models";
 export {
   IProductDetails,
   IAddProductRequestModel,
   IDeleteProductRequestModel,
   IGetProductByIdRequestModel,
-  IUpdateProductRequestModel
-} from './product-request-models';
+  IUpdateProductRequestModel,
+} from "./product-request-models";
 export {
   IOrderDetails,
   IAddOrderRequestModel,
   IDeleteOrderRequestModel,
   IGetOrderByIdRequestModel,
-  IUpdateOrderRequestModel
-} from './order-request-models';
+  IUpdateOrderRequestModel,
+} from "./order-request-models";
 export {
   IImageDetails,
   IAddImageRequestModel,
   IDeleteImageRequestModel,
   IGetImageByIdRequestModel,
-  IUpdateOrCreateImageRequestModel
-} from './image-request-models';
+  IUpdateOrCreateImageRequestModel,
+} from "./image-request-models";

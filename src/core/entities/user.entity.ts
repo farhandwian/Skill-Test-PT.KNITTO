@@ -1,9 +1,11 @@
-import Entity from './interfaces/entity.abstract';
+import Entity from "./interfaces/entity.abstract";
 
 interface IUserProps {
   firstName: string;
   lastName: string;
-  meta: Record<string, any>
+  username: string;
+  password: string;
+  meta: Record<string, any>;
 }
 
 export default class User extends Entity<IUserProps> {
@@ -12,13 +14,9 @@ export default class User extends Entity<IUserProps> {
   }
 
   public static create(userData: IUserProps, id: string | null): User {
-    const {
-      firstName,
-      lastName,
-      meta = {}
-    } = userData;
+    const { firstName, lastName, username, password, meta = {} } = userData;
 
-    return new User({ firstName, lastName, meta }, id);
+    return new User({ firstName, lastName, username, password, meta }, id);
   }
 
   get firstName(): string {
@@ -27,6 +25,14 @@ export default class User extends Entity<IUserProps> {
 
   get lastName(): string {
     return this.props.lastName;
+  }
+
+  get username(): string {
+    return this.props.username;
+  }
+
+  get password(): string {
+    return this.props.password;
   }
 
   get meta(): Record<string, any> {

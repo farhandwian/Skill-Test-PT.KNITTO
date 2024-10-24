@@ -1,12 +1,12 @@
-import express, { Express } from 'express';
-import pinoHttp from './middlewares/vendors/pino-http';
+import express, { Express } from "express";
+import pinoHttp from "./middlewares/vendors/pino-http";
 
-import errorHandler from './middlewares/error-handler';
-import errorLogger from './middlewares/error-logger';
-import notFoundHandler from './middlewares/not-found-handler';
-import mikroOrmRequestContext from './middlewares/vendors/mikroorm-request-context';
+import errorHandler from "./middlewares/error-handler";
+import errorLogger from "./middlewares/error-logger";
+import notFoundHandler from "./middlewares/not-found-handler";
+import mikroOrmRequestContext from "./middlewares/vendors/mikroorm-request-context";
 
-import { RouterMaker } from './routers/interfaces';
+import { RouterMaker } from "./routers/interfaces";
 
 export default class ExpressApp {
   private _app: Express;
@@ -43,11 +43,11 @@ export default class ExpressApp {
 
   private setMiddleWare(): void {
     this._app.use(pinoHttp);
-    this._app.use(mikroOrmRequestContext);
+    // this._app.use(mikroOrmRequestContext);
   }
 
   private setAppRouter(): void {
-    this._app.use('/api/v1', this._routerMaker.getRouter());
+    this._app.use("/api/v1", this._routerMaker.getRouter());
   }
 
   private setErrorHanders(): void {

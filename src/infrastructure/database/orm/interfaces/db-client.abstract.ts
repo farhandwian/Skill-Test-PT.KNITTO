@@ -1,12 +1,12 @@
-import type { Sequelize } from 'sequelize';
-import type { InMemoryDatabase } from '../in-memory';
-import type { MikroORM } from '@mikro-orm/core';
-
-export type DatabaseConnection = MikroORM | Sequelize | InMemoryDatabase | null;
+import type { Sequelize } from "sequelize";
+// import type { InMemoryDatabase } from "../in-memory";
+import type { MikroORM } from "@mikro-orm/core";
+import type { Pool } from "pg";
+export type DatabaseConnection = MikroORM | Sequelize | Pool | null;
 
 export interface IDatabaseClient {
   setDialect(dbDialect: string): void;
-  
+
   connect(): Promise<void>;
 
   close(): Promise<null | void>;
@@ -22,7 +22,7 @@ export default abstract class DatabaseClient implements IDatabaseClient {
 
   public constructor() {
     this._connection = null;
-    this._dialect = '';
+    this._dialect = "";
   }
 
   public setDialect(dbDialect: string): void {

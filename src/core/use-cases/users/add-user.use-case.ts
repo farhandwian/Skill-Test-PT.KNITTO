@@ -1,11 +1,11 @@
-import { Result } from '../../lib/result';
-import { User } from '../../entities';
-import { UserMapper } from '../../mappers/user';
-import IEntityMapper from '../../mappers/i-entity-mapper'
-import { IUserDto } from '../../dtos/user'
+import { Result } from "../../lib/result";
+import { User } from "../../entities";
+import { UserMapper } from "../../mappers/user";
+import IEntityMapper from "../../mappers/i-entity-mapper";
+import { IUserDto } from "../../dtos/user";
 
-import { IUseCaseInputBoundary, IUseCaseOutputBoundary } from '../interfaces';
-import { IUsersGateway, IAddUserRequestModel } from '../interfaces';
+import { IUseCaseInputBoundary, IUseCaseOutputBoundary } from "../interfaces";
+import { IUsersGateway, IAddUserRequestModel } from "../interfaces";
 
 export default class AddUserUseCase implements IUseCaseInputBoundary {
   private usersRepository: IUsersGateway;
@@ -14,7 +14,7 @@ export default class AddUserUseCase implements IUseCaseInputBoundary {
 
   public constructor(
     usersRepository: IUsersGateway,
-    presenter: IUseCaseOutputBoundary,
+    presenter: IUseCaseOutputBoundary
   ) {
     this.usersRepository = usersRepository;
     this.presenter = presenter;
@@ -22,14 +22,12 @@ export default class AddUserUseCase implements IUseCaseInputBoundary {
   }
 
   public async execute(requestDetails: IAddUserRequestModel): Promise<void> {
-    const user = User.create(requestDetails, null);
+    // const user = User.create(requestDetails, null);
 
     try {
-      const addedUser = await this.usersRepository.save(user);
-
-      const addedUserDto = this.dataMapper.toDTO(addedUser);
-
-      this.presenter.execute(addedUserDto);
+      // const addedUser = await this.usersRepository.save(user);
+      // const addedUserDto = this.dataMapper.toDTO(addedUser);
+      // this.presenter.execute(addedUserDto);
     } catch (err: any) {
       throw Result.fail(err);
     }

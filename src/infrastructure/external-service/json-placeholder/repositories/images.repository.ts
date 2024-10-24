@@ -1,22 +1,22 @@
-import got, { Got, HTTPError } from 'got';
+import got, { Got, HTTPError } from "got";
 
-import { Image } from '@core/entities';
-import { ImageMapper } from '@core/mappers/image'
-import IEntityMapper from '@core/mappers/i-entity-mapper'
+import { Image } from "@core/entities";
+import { ImageMapper } from "@core/mappers/image";
+import IEntityMapper from "@core/mappers/i-entity-mapper";
 
-import { IImagesGateway } from '@core/use-cases/interfaces';
+import { IImagesGateway } from "@core/use-cases/interfaces";
 
 type PropByString = Record<string, any>;
 
 export default class ImagesRepository implements IImagesGateway {
   private _pathname: string;
   private _client: Got;
-  private _dataMapper: Pick<IEntityMapper<Image, any>, 'toDomain'>;
+  private _dataMapper: Pick<IEntityMapper<Image, any>, "toDomain">;
 
   public constructor() {
-    this._pathname = 'photos';
+    this._pathname = "https://jsonplaceholder.typicode.com/photos";
     this._client = got.extend({
-      prefixUrl: process.env.SERVICE_JSON_PLACEHOLDER
+      prefixUrl: process.env.SERVICE_JSON_PLACEHOLDER,
     });
     this._dataMapper = new ImageMapper();
   }
@@ -27,9 +27,9 @@ export default class ImagesRepository implements IImagesGateway {
     const imageRequestDetails = image.toJSON();
 
     const response: PropByString = await this._client.post(url, {
-      responseType: 'json',
+      responseType: "json",
       resolveBodyOnly: true,
-      json: imageRequestDetails
+      json: imageRequestDetails,
     });
 
     response._externalId = response.id;
@@ -48,9 +48,9 @@ export default class ImagesRepository implements IImagesGateway {
 
     try {
       const response: PropByString = await this._client.put(url, {
-        responseType: 'json',
+        responseType: "json",
         resolveBodyOnly: true,
-        json: imageRequestDetails
+        json: imageRequestDetails,
       });
 
       response._externalId = response.id;
@@ -81,7 +81,7 @@ export default class ImagesRepository implements IImagesGateway {
 
     const response: PropByString = await this._client.get(url).json();
 
-    if (JSON.stringify(response) === '{}') {
+    if (JSON.stringify(response) === "{}") {
       return null;
     }
 

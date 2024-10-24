@@ -1,36 +1,34 @@
 import { Request, Response, NextFunction } from "express";
-
-import { AddUserController } from "@adapters/controllers/users";
+import { LoginController } from "@adapters/controllers/users";
 import { UsersRepositoryFactory } from "../../../../../database/repositories";
-import { CreatedResponder } from "../../../../responders/express/users";
-import { addUserValidator } from "../../../../validators/use-cases/users";
-
+import { OkResponder } from "../../../../responders/express/users";
+import { loginValidator } from "../../../../validators/use-cases/users";
 import { Deliverer } from "../interfaces";
 
-export default class AddUserDeliverer extends Deliverer {
+export default class LoginDeliverer extends Deliverer {
   public constructor(req: Request, res: Response, next: NextFunction) {
     super(req, res, next);
   }
 
   public async IndexActionJSON(): Promise<void> {
-    console.log("tes 7");
+    console.log("Processing login request");
     const usersRepositoryFactory = new UsersRepositoryFactory();
     const usersRepository = usersRepositoryFactory.create(
       process.env.DB_DIALECT!
     );
 
-    const createdResponder = new CreatedResponder(this.res);
+    const successResponder = new OkResponder(this.res);
 
-    const addUserController = new AddUserController(
+    const loginController = new LoginController(
       usersRepository,
-      createdResponder,
-      addUserValidator
+      successResponder,
+      loginValidator
     );
 
     const mappedHttpRequest = this.mapHttpRequest(this.req);
 
     try {
-      await addUserController.processRequest(mappedHttpRequest);
+      await loginController.processRequest(mappedHttpRequest);
     } catch (err: any) {
       this.handleError(err);
     }

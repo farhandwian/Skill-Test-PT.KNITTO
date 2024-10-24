@@ -1,10 +1,8 @@
-import SequelizeClient from '../orm/sequelize/client';
-import MikroOrmClient from './mikroorm/client';
-import InMemoryClient from '../orm/in-memory/client';
+import PGClient from "./pg/client";
 
-import { DatabaseClient } from './interfaces';
+import { DatabaseClient } from "./interfaces";
 
-import * as constants from '@config/constants';
+import * as constants from "@config/constants";
 
 export default class DatabaseClientFactory {
   public constructor() {}
@@ -20,9 +18,10 @@ export default class DatabaseClientFactory {
     const { dbDialects } = constants;
 
     const databaseClientByDialect = {
-      [dbDialects.MARIA_DB]: () => new SequelizeClient(),
-      [dbDialects.POSTGRES]: () => new MikroOrmClient(),
-      [dbDialects.IN_MEMORY]: () => new InMemoryClient()
+      // [dbDialects.MARIA_DB]: () => new SequelizeClient(),
+      // [dbDialects.POSTGRES]: () => new MikroOrmClient(),
+      [dbDialects.POSTGRES_RAW]: () => new PGClient(),
+      // [dbDialects.IN_MEMORY]: () => new InMemoryClient(),
     };
 
     if (dbDialect in databaseClientByDialect) {
@@ -30,6 +29,6 @@ export default class DatabaseClientFactory {
       return databaseClientMaker;
     }
 
-    return databaseClientByDialect[dbDialects.IN_MEMORY];
+    return databaseClientByDialect[dbDialects.POSTGRES_RAW];
   }
 }
