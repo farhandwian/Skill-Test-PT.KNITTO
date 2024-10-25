@@ -9,10 +9,7 @@ This is my demo of a RESTful API implementing Robert Martin's clean architecture
 - Web Delivery Mechanism
   - Express.js
 - Database Repositories
-  - In-memory
-  - Sequelize
-    - MariaDB
-    - PostgreSQL
+  - PG
 - External Services
   - jsonplaceholder (example)
 
@@ -24,51 +21,7 @@ I tried to organize the application's files and folders according to this diagra
 
 # Routes
 
-These are the routes this API uses:
-
-### Users
-
-| `/users`   |                     |                 |     |
-| ---------- | ------------------- | --------------- | --- |
-| **Method** | **Route**           | **Description** |
-| GET        | `/api/v1/users/:id` | get one user    |
-| GET        | `/api/v1/users`     | get all users   |
-| DELETE     | `/api/v1/users/:id` | delete one user |
-| PATCH      | `/api/v1/users:id`  | update one user |
-| POST       | `/api/v1/users`     | create one user |
-
-### Products
-
-| `/products` |                        |                    |     |
-| ----------- | ---------------------- | ------------------ | --- |
-| **Method**  | **Route**              | **Description**    |
-| GET         | `/api/v1/products/:id` | get one product    |
-| GET         | `/api/v1/products`     | get all products   |
-| DELETE      | `/api/v1/products/:id` | delete one product |
-| PATCH       | `/api/v1/products/:id` | update one product |
-| POST        | `/api/v1/products`     | create one product |
-
-### Orders
-
-| `/orders`  |                      |                  |     |
-| ---------- | -------------------- | ---------------- | --- |
-| **Method** | **Route**            | **Description**  |
-| GET        | `/api/v1/orders/:id` | get one order    |
-| GET        | `/api/v1/orders`     | get all orders   |
-| DELETE     | `/api/v1/orders/:id` | delete one order |
-| PUT        | `/api/v1/orders/:id` | update one order |
-| POST       | `/api/v1/orders`     | create one order |
-
-### Images
-
-| `/images`  |                             |                  |     |
-| ---------- | --------------------------- | ---------------- | --- |
-| **Method** | **Route**                   | **Description**  |
-| GET        | `/api/v1/images/:id`        | get one image    |
-| GET        | `/api/v1/images`            | get all images   |
-| DELETE     | `/api/v1/images/:id`        | delete one image |
-| POST       | `/api/v1/images/:id/update` | update one image |
-| POST       | `/api/v1/images`            | create one image |
+look postman documentation
 
 ## Run Locally
 
@@ -76,13 +29,13 @@ These are the routes this API uses:
 
 - Node.js
 - TypeScript
-- MariaDB or PostgreSQL
+- PostgreSQL
 
 #### 1. Clone the repo and install dependencies
 
 ```bash
 git clone
-cd clean-architecture-model-ts
+cd Skill Test PT.Knitto
 npm install
 ```
 
@@ -91,16 +44,23 @@ npm install
 In the `.env` file, update the following environment variables for sequelize to work correctly.
 
 - DB_DIALECT
-  - (Enter "inMemory" to use the in-memory database)
+  - (Enter "postgresRaw" to use the pg raw as database client)
 - DB_NAME
 - DB_USERNAME
 - DB_PASSWORD
 - DB_HOST
 - DB_PORT
 - PORT
+- JWT_SECRET
   - (Defaults to 3000)
 
-#### 3. Start the server
+#### 3. Import Dump SQL and Postman
+
+import backup-db-postgresql.sql first if it doesn't work import dump.sql
+
+import Skill Test PT.Knitto.postman_collection.json file
+
+#### 4. Start the server
 
 To run in production mode where code is transpiled into a `dist` folder and run directly in `node`:
 

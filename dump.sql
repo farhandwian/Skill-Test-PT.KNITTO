@@ -5,6 +5,8 @@ CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     meta JSONB NOT NULL DEFAULT '{}'::jsonb,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -33,6 +35,18 @@ CREATE TABLE products (
   created_at TIMESTAMP DEFAULT NOW() NOT NULL,
   updated_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
+
+ALTER TABLE products
+ADD COLUMN kode VARCHAR(255) NULL;
+
+
+
+CREATE SEQUENCE product_running_number_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 INSERT INTO products (
     id,
@@ -100,3 +114,4 @@ INSERT INTO products (
     NOW(),
     NOW()
 );
+

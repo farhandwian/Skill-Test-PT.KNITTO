@@ -42,9 +42,20 @@ export default class ProductsRepositoryPG
 
   public async save(product: Product, client?: PoolClient): Promise<Product> {
     const productRawData = product.toJSON();
+
+    // handle race condition
+    const res = await this.executeQuery(
+      "SELECT nextval('product_running_number_seq') AS running_number",
+      [],
+      client
+    );
+    const runningNumber = res.rows[0].running_number;
+
+    const productCode = `PRD-${String(runningNumber).padStart(5, "0")}`;
+
     const query = `
-      INSERT INTO products (name, description, price, color, quantity, meta, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      INSERT INTO products (name, description, price, color, quantity,kode, meta, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
       RETURNING *;
     `;
 
@@ -53,7 +64,8 @@ export default class ProductsRepositoryPG
       productRawData.description,
       productRawData.price,
       productRawData.color,
-      productRawData.quantity, // Added quantity
+      productRawData.quantity,
+      productCode,
       JSON.stringify(productRawData.meta),
     ];
 
@@ -96,7 +108,7 @@ export default class ProductsRepositoryPG
       product.description,
       product.price,
       product.color,
-      product.quantity, // Added quantity
+      product.quantity,
       JSON.stringify(product.meta),
       context.id,
     ];

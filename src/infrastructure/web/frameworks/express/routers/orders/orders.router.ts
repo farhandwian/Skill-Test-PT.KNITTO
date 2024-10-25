@@ -14,7 +14,7 @@ export default class OrdersRouter extends RouterMaker {
   }
 
   private initRoutes(): void {
-    this._router.get("/:id", this.makeRequestHandler(GetOrderByIdDeliverer));
+    // this._router.get("/:id", this.makeRequestHandler(GetOrderByIdDeliverer));
 
     this._router.get(
       "/laporan/get-product-order-counts",
@@ -27,8 +27,8 @@ export default class OrdersRouter extends RouterMaker {
       this.makeRequestHandler(AddOrderDeliverer)
     );
 
-    this._router.patch("/:id", this.makeRequestHandler(UpdateOrderDeliverer));
+    // this._router.patch("/:id", this.makeRequestHandler(UpdateOrderDeliverer));
 
-    this._router.delete("/:id", this.makeRequestHandler(DeleteOrderDeliverer));
+    // this._router.delete("/:id", this.makeRequestHandler(DeleteOrderDeliverer));
   }
 }
