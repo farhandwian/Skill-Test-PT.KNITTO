@@ -1,19 +1,19 @@
 // import { ProductsRepositoryInMemory } from '../orm/in-memory/repositories';
 // import { ProductsRepositorySequelize } from '../orm/sequelize/repositories';
 // import { ProductsRepositoryMirkroORM } from '../orm/mikroorm/repositories';
-import { UsersRepositoryPG } from "../orm/pg/repositories";
+import { ProductsRepositoryPG } from "../orm/pg/repositories";
 
 import * as constants from "@config/constants";
 
-import { IEntityGateway } from "@core/use-cases/interfaces";
+import { IProductsGateway } from "@core/use-cases/interfaces";
 import { RepositoryFactory } from "./interfaces";
 
-export default class ProductsRepositoryFactory extends RepositoryFactory<IEntityGateway> {
-  public create(dbDialect: string): IEntityGateway {
+export default class ProductsRepositoryFactory extends RepositoryFactory<IProductsGateway> {
+  public create(dbDialect: string): IProductsGateway {
     const { dbDialects } = constants;
 
     const productsRepositoryMakerByDialect = {
-      [dbDialects.POSTGRES_RAW]: () => new UsersRepositoryPG(),
+      [dbDialects.POSTGRES_RAW]: () => new ProductsRepositoryPG(),
     };
 
     const repositoryMaker = this.selectRepositoryMaker(

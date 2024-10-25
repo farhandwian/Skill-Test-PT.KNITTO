@@ -12,7 +12,6 @@ export default class MainRouter extends RouterMaker {
   }
 
   private initRoutes(): void {
-    console.log("tes 5");
     this._router.use("/users", new UsersRouter().getRouter());
     this._router.use("/products", new ProductsRouter().getRouter());
     this._router.use("/orders", new OrdersRouter().getRouter());

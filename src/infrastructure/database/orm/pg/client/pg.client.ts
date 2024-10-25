@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Pool, PoolClient } from "pg";
 import logger from "@common/logger";
 import DatabaseClient from "../../interfaces/db-client.abstract";
 
@@ -47,6 +47,26 @@ export default class PgClient extends DatabaseClient {
     } catch (err) {
       logger.error({ err }, "Error executing query");
       throw err;
+    }
+  }
+
+  // Method to handle transactions
+  public async transaction<T>(
+    callback: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const client = await this.pool.connect();
+
+    try {
+      await client.query("BEGIN");
+      const result = await callback(client);
+      await client.query("COMMIT");
+      return result;
+    } catch (error) {
+      await client.query("ROLLBACK");
+      logger.error({ error }, "Transaction failed, rolled back.");
+      throw error;
+    } finally {
+      client.release();
     }
   }
 }

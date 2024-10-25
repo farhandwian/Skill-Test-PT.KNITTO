@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Pool, PoolClient } from "pg";
 import { Order } from "@core/entities";
 import { OrderMapper } from "@core/mappers/order";
 import IEntityMapper from "@core/mappers/i-entity-mapper";
@@ -24,7 +24,19 @@ export default class OrdersRepositoryPG
     this._dataMapper = new OrderMapper();
   }
 
-  public async save(order: Order): Promise<Order> {
+  private async executeQuery(
+    query: string,
+    values: any[],
+    client?: PoolClient
+  ) {
+    if (client) {
+      return await client.query(query, values);
+    } else {
+      return await this._pool.query(query, values);
+    }
+  }
+
+  public async save(order: Order, client?: PoolClient): Promise<Order> {
     const orderRawData = order.toJSON();
     const query = `
       INSERT INTO orders (user_id, product_ids, date, is_paid, meta, created_at, updated_at)
@@ -34,20 +46,23 @@ export default class OrdersRepositoryPG
 
     const values = [
       orderRawData.userId,
-      orderRawData.productIds, // Assuming productIds is stored as an array in PostgreSQL
+      orderRawData.productIds,
       orderRawData.date,
       orderRawData.isPaid,
-      JSON.stringify(orderRawData.meta), // meta needs to be stringified as it's JSON
+      JSON.stringify(orderRawData.meta),
     ];
 
-    const result = await this._pool.query(query, values);
+    const result = await this.executeQuery(query, values, client);
 
     return this._dataMapper.toDomain(result.rows[0]);
   }
 
-  public async findOne(orderId: string): Promise<Order | null> {
+  public async findOne(
+    orderId: string,
+    client?: PoolClient
+  ): Promise<Order | null> {
     const query = `SELECT * FROM orders WHERE id = $1;`;
-    const result = await this._pool.query(query, [orderId]);
+    const result = await this.executeQuery(query, [orderId], client);
 
     if (result.rows.length === 0) return null;
 
@@ -56,9 +71,10 @@ export default class OrdersRepositoryPG
 
   public async update(
     order: Order,
-    context: { id: string }
+    context: { id: string },
+    client?: PoolClient
   ): Promise<Order | null> {
-    const foundOrder = await this.findOne(context.id);
+    const foundOrder = await this.findOne(context.id, client);
     if (!foundOrder) return null;
 
     const query = `
@@ -70,33 +86,52 @@ export default class OrdersRepositoryPG
 
     const values = [
       order.userId,
-      order.productIds, // Assuming productIds is stored as an array in PostgreSQL
+      order.productIds,
       order.date,
       order.isPaid,
-      JSON.stringify(order.meta), // meta needs to be stringified
+      JSON.stringify(order.meta),
       context.id,
     ];
 
-    const result = await this._pool.query(query, values);
+    const result = await this.executeQuery(query, values, client);
 
     return this._dataMapper.toDomain(result.rows[0]);
   }
 
-  public async delete(id: string): Promise<true | null> {
+  public async delete(id: string, client?: PoolClient): Promise<true | null> {
     const query = `DELETE FROM orders WHERE id = $1 RETURNING id;`;
 
-    const result = await this._pool.query(query, [id]);
+    const result = await this.executeQuery(query, [id], client);
 
     if (result.rows.length === 0) return null;
 
     return true;
   }
 
-  public async findAll(): Promise<Order[]> {
+  public async findAll(client?: PoolClient): Promise<Order[]> {
     const query = `SELECT * FROM orders;`;
 
-    const result = await this._pool.query(query);
+    const result = await this.executeQuery(query, [], client);
 
     return result.rows.map((row) => this._dataMapper.toDomain(row));
+  }
+
+  // Metode transaction tetap sama
+  public async transaction<T>(
+    callback: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const client = await this._pool.connect();
+
+    try {
+      await client.query("BEGIN");
+      const result = await callback(client);
+      await client.query("COMMIT");
+      return result;
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 }

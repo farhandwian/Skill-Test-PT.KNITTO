@@ -7,6 +7,7 @@ export interface IProductDetails {
   description: string;
   images: string[];
   price: number;
+  quantity: number;
   color: string;
   meta: any;
 }

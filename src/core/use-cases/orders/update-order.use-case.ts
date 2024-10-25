@@ -1,28 +1,21 @@
-import { Result } from '../../lib/result';
-import { ValidationError } from '@common/errors';
-import { Order, Product } from '../../entities';
-import { ValueNotFoundError } from '../../../common/errors'
-import { OrderMapper } from '../../mappers/order';
-import IEntityMapper from '../../mappers/i-entity-mapper'
-import { IOrderDto } from '../../dtos/order'
+import { Result } from "../../lib/result";
+import { ValidationError } from "@common/errors";
+import { Order, Product } from "../../entities";
+import { ValueNotFoundError } from "../../../common/errors";
+import { OrderMapper } from "../../mappers/order";
+import IEntityMapper from "../../mappers/i-entity-mapper";
+import { IOrderDto } from "../../dtos/order";
 
-import { IUseCaseInputBoundary, IUseCaseOutputBoundary } from '../interfaces';
-import {
-  IProductsGateway,
-  IUsersGateway,
-  IOrdersGateway,
-  EntityGatewayDictionary
-} from '../interfaces';
-import { IUpdateOrderRequestModel, IOrderDetails } from '../interfaces';
+import { IUseCaseInputBoundary, IUseCaseOutputBoundary } from "../interfaces";
+import { IProductsGateway, IUsersGateway, IOrdersGateway } from "../interfaces";
+import { IUpdateOrderRequestModel, IOrderDetails } from "../interfaces";
 
 interface IValidationError {
   field: string;
   msg: string;
 }
 
-export default class UpdateOrderUseCase
-  implements IUseCaseInputBoundary
-{
+export default class UpdateOrderUseCase implements IUseCaseInputBoundary {
   private ordersRepository: IOrdersGateway;
   private usersRepository: IUsersGateway;
   private productsRepository: IProductsGateway;
@@ -30,19 +23,21 @@ export default class UpdateOrderUseCase
   private dataMapper: IEntityMapper<Order, IOrderDto>;
 
   public constructor(
-    reposByResource: EntityGatewayDictionary,
+    ordersRepository: IOrdersGateway,
+    usersRepository: IUsersGateway,
+    productsRepository: IProductsGateway,
     presenter: IUseCaseOutputBoundary
   ) {
-    this.ordersRepository = reposByResource.orders;
-    this.usersRepository = reposByResource.users;
-    this.productsRepository = reposByResource.products;
+    this.ordersRepository = ordersRepository;
+    this.usersRepository = usersRepository;
+    this.productsRepository = productsRepository;
     this.presenter = presenter;
     this.dataMapper = new OrderMapper();
   }
 
   public async execute({
     id,
-    orderDetails
+    orderDetails,
   }: IUpdateOrderRequestModel): Promise<void> {
     try {
       const foundOrder = await this.ordersRepository.findOne(id);
@@ -73,7 +68,7 @@ export default class UpdateOrderUseCase
         productIds: orderDetails.productIds,
         date: orderDetails.date,
         isPaid: orderDetails.isPaid,
-        meta: orderDetails.meta
+        meta: orderDetails.meta,
       },
       orderIdOrNull
     );
@@ -81,14 +76,14 @@ export default class UpdateOrderUseCase
     const validationErrors = await this.getValidationErrors(order);
 
     if (validationErrors.length > 0) {
-      const invalid = new ValidationError('Validation Errors');
-      invalid.reason = 'Bad data';
+      const invalid = new ValidationError("Validation Errors");
+      invalid.reason = "Bad data";
       invalid.validationErrors = validationErrors;
       throw invalid;
     }
 
     const addedOrder = await this.ordersRepository.update(order, {
-      id: order.id
+      id: order.id,
     });
 
     const addedOrderDto = this.dataMapper.toDTO(addedOrder!);
@@ -98,7 +93,6 @@ export default class UpdateOrderUseCase
 
   private async getValidationErrors(order: Order): Promise<IValidationError[]> {
     const notFoundProductIds = await this.getProductIdValidationErrors(order);
-
     const notFoundUserId = await this.getUserIdValidationError(order);
 
     return [...notFoundProductIds, ...notFoundUserId];
@@ -128,8 +122,8 @@ export default class UpdateOrderUseCase
     const returnable = [] as IValidationError[];
 
     returnable.push({
-      field: 'productIds',
-      msg: `No products with ids ${invalidProductIds.join(', ')}`
+      field: "productIds",
+      msg: `No products with ids ${invalidProductIds.join(", ")}`,
     });
 
     return returnable;
@@ -147,8 +141,8 @@ export default class UpdateOrderUseCase
     const returnable = [] as IValidationError[];
 
     returnable.push({
-      field: 'userId',
-      msg: `No user with id ${userId}`
+      field: "userId",
+      msg: `No user with id ${userId}`,
     });
 
     return returnable;

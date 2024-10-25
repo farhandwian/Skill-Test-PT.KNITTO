@@ -1,12 +1,12 @@
-import { Result } from '../../lib/result';
-import { ValueNotFoundError } from '@common/errors';
-import { Product } from '../../entities';
-import { ProductMapper } from '../../mappers/product';
-import IEntityMapper from '../../mappers/i-entity-mapper'
-import { IProductDto } from '../../dtos/product'
+import { Result } from "../../lib/result";
+import { ValueNotFoundError } from "@common/errors";
+import { Product } from "../../entities";
+import { ProductMapper } from "../../mappers/product";
+import IEntityMapper from "../../mappers/i-entity-mapper";
+import { IProductDto } from "../../dtos/product";
 
-import { IUseCaseInputBoundary, IUseCaseOutputBoundary } from '../interfaces';
-import { IProductsGateway, IGetProductByIdRequestModel } from '../interfaces';
+import { IUseCaseInputBoundary, IUseCaseOutputBoundary } from "../interfaces";
+import { IProductsGateway, IGetProductByIdRequestModel } from "../interfaces";
 
 export default class GetProductByIdUseCase implements IUseCaseInputBoundary {
   private productsRepository: IProductsGateway;
@@ -22,9 +22,9 @@ export default class GetProductByIdUseCase implements IUseCaseInputBoundary {
     this.dataMapper = new ProductMapper();
   }
 
-  public async execute({ id }: IGetProductByIdRequestModel
-  ): Promise<void> {
+  public async execute({ id }: IGetProductByIdRequestModel): Promise<void> {
     try {
+      console.log("get-product-by-id.use-case");
       const foundProduct = await this.productsRepository.findOne(id);
 
       if (foundProduct === null) {
@@ -33,7 +33,7 @@ export default class GetProductByIdUseCase implements IUseCaseInputBoundary {
         );
       }
 
-      const foundProductDto = this.dataMapper.toDTO(foundProduct)
+      const foundProductDto = this.dataMapper.toDTO(foundProduct);
 
       this.presenter.execute(foundProductDto);
     } catch (err: any) {

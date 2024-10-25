@@ -1,15 +1,22 @@
 import { User, Product, Order, Image } from "../../entities";
+import { PoolClient } from "pg";
 
 interface IWrite<T> {
-  save(entity: T): Promise<T>;
-  update(entity: T, context: { id: string }): Promise<T | null>;
-  delete(id: string): Promise<true | null>;
+  save(entity: T, client?: PoolClient): Promise<T>;
+  update(
+    entity: T,
+    context: { id: string },
+    client?: PoolClient
+  ): Promise<T | null>;
+  delete(id: string, client?: PoolClient): Promise<true | null>;
 }
 
 interface IRead<T> {
-  findAll(): Promise<T[]>;
-  findOne(id: string): Promise<T | null>;
+  findAll(client?: PoolClient): Promise<T[]>;
+  findOne(id: string, client?: PoolClient): Promise<T | null>;
 }
+
+// ... kode lainnya tetap sama ...
 
 interface IAuth<T> {
   findByUsername(username: string): Promise<User | null>;

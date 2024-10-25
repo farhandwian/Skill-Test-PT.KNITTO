@@ -55,7 +55,7 @@ export default class UsersRepositoryPG
   }
 
   public async findOne(userId: string): Promise<User | null> {
-    const query = `SELECT * FROM users WHERE user_id = $1;`;
+    const query = `SELECT * FROM users WHERE id = $1;`;
     const result = await this._pool.query(query, [userId]);
 
     if (result.rows.length === 0) return null;

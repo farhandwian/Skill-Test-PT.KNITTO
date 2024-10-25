@@ -1,19 +1,37 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from "express";
 
-import { AddOrderController } from '@adapters/controllers/orders';
+import { AddOrderController } from "@adapters/controllers/orders";
 import {
-  UsersRepositoryFactory,
+  OrdersRepositoryFactory,
   ProductsRepositoryFactory,
-  OrdersRepositoryFactory
-} from '../../../../../database/repositories';
-import { CreatedResponder } from '../../../../responders/express/users';
-import { addOrderValidator } from '../../../../validators/use-cases/orders';
+  UsersRepositoryFactory,
+} from "../../../../../database/repositories";
 
-import { Deliverer } from '../interfaces';
+import { TransactionRepositoryPG } from "../../../../../database/orm/pg/repositories";
+
+import { CreatedResponder } from "../../../../responders/express/users";
+import { addOrderValidator } from "../../../../validators/use-cases/orders";
+
+import { DatabaseClient } from "@infra/database/orm";
+import { Deliverer } from "../interfaces";
+
+import { DatabaseConnection } from "../../../../../database/orm/interfaces";
+
+import { Pool } from "pg";
 
 export default class AddOrderDeliverer extends Deliverer {
+  private db: DatabaseConnection;
+
   public constructor(req: Request, res: Response, next: NextFunction) {
     super(req, res, next);
+
+    const databaseClient = DatabaseClient.getInstance();
+    const newDb = databaseClient.getConnection();
+    if (newDb) {
+      this.db = newDb;
+    } else {
+      throw new Error("Database connection is not initialized.");
+    }
   }
 
   public async IndexActionJSON(): Promise<void> {
@@ -32,18 +50,24 @@ export default class AddOrderDeliverer extends Deliverer {
       process.env.DB_DIALECT!
     );
 
-    const repositoryDictionary = {
-      orders: ordersRepository,
-      users: usersRepository,
-      products: productsRepository
-    };
+    // Casting dan validasi tipe koneksi `Pool` untuk `TransactionRepositoryPG`
+    if (!(this.db instanceof Pool)) {
+      throw new Error(
+        "Database connection is not a valid PostgreSQL Pool instance"
+      );
+    }
+
+    const transactionRepository = new TransactionRepositoryPG(this.db);
 
     const createdResponder = new CreatedResponder(this.res);
 
     const addOrderController = new AddOrderController(
-      repositoryDictionary,
+      ordersRepository,
+      usersRepository,
+      productsRepository,
       createdResponder,
-      addOrderValidator
+      addOrderValidator,
+      transactionRepository
     );
 
     const mappedHttpRequest = this.mapHttpRequest(this.req);

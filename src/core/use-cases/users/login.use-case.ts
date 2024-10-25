@@ -4,8 +4,7 @@ import { IUsersGateway, ILoginRequestModel } from "../interfaces";
 import { IUseCaseInputBoundary, IUseCaseOutputBoundary } from "../interfaces";
 import { Result } from "../../lib/result";
 import { User } from "../../entities";
-
-const JWT_SECRET = "your_jwt_secret";
+import { NIL } from "uuid";
 
 export default class LoginUseCase implements IUseCaseInputBoundary {
   private usersRepository: IUsersGateway;
@@ -38,9 +37,9 @@ export default class LoginUseCase implements IUseCaseInputBoundary {
 
       const token = jwt.sign(
         { id: user.id, username: user.username },
-        JWT_SECRET,
+        process.env.JWT_SECRET || "secret",
         {
-          expiresIn: "1h",
+          expiresIn: "5h",
         }
       );
       const userDto = { username: user.username, token };
