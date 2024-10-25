@@ -116,6 +116,23 @@ export default class OrdersRepositoryPG
     return result.rows.map((row) => this._dataMapper.toDomain(row));
   }
 
+  public async findOrdersGroupByProducts(client?: PoolClient): Promise<any> {
+    const query = `SELECT 
+    p.id AS product_id,
+    p.name AS product_name,
+    COUNT(o.id) AS order_count
+    FROM 
+        products p
+    JOIN 
+        orders o ON p.id = ANY(o.product_ids)
+    GROUP BY 
+    p.id, p.name;
+    `;
+
+    const result = await this.executeQuery(query, [], client);
+    return result.rows;
+  }
+
   // Metode transaction tetap sama
   public async transaction<T>(
     callback: (client: PoolClient) => Promise<T>

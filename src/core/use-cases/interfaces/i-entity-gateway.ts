@@ -16,6 +16,10 @@ interface IRead<T> {
   findOne(id: string, client?: PoolClient): Promise<T | null>;
 }
 
+interface IOrder<T> {
+  findOrdersGroupByProducts(client?: PoolClient): Promise<T | null>;
+}
+
 // ... kode lainnya tetap sama ...
 
 interface IAuth<T> {
@@ -36,6 +40,9 @@ export interface IUsersGateway
 
 export interface IProductsGateway extends IWrite<Product>, IRead<Product> {}
 
-export interface IOrdersGateway extends IWrite<Order>, IRead<Order> {}
+export interface IOrdersGateway
+  extends IWrite<Order>,
+    IRead<Order>,
+    IOrder<Order> {}
 
 export interface IImagesGateway extends IWrite<Image>, IRead<Image> {}

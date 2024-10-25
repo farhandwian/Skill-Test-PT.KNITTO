@@ -23,78 +23,80 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE products (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Menggunakan fungsi uuid_generate_v4 untuk UUID
-  name VARCHAR(255) NOT NULL, -- Nama produk
-  description TEXT NOT NULL, -- Deskripsi produk
-  price NUMERIC(10, 2) DEFAULT 0.00 NOT NULL CHECK (price >= 0), -- Harga dengan dua desimal, tidak boleh negatif
-  quantity NOT NULL CHECK (price >= 0), -- Harga dengan dua desimal, tidak boleh negatif
-  color VARCHAR(255) NOT NULL, -- Warna produk
-  meta JSONB DEFAULT '{}'::jsonb NOT NULL, -- Menyimpan meta sebagai JSONB
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Using uuid_generate_v4 for UUID
+  name VARCHAR(255) NOT NULL, -- Product name
+  description TEXT NOT NULL, -- Product description
+  price NUMERIC(10, 2) DEFAULT 0.00 NOT NULL CHECK (price >= 0), -- Price with two decimals, must be non-negative
+  quantity INTEGER NOT NULL CHECK (quantity >= 0), -- Quantity must be non-negative
+  color VARCHAR(255) NOT NULL, -- Product color
+  meta JSONB DEFAULT '{}'::jsonb NOT NULL, -- Store meta as JSONB
   created_at TIMESTAMP DEFAULT NOW() NOT NULL,
   updated_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
-
 
 INSERT INTO products (
     id,
     name,
     description,
     price,
+    quantity,
     color,
     meta,
     created_at,
-    updated_at,
-    quantity
+    updated_at
 ) VALUES 
 (
     uuid_generate_v4(),
     'T-Shirt',
-    'Comfortable cotton t-shirt',00,
+    'Comfortable cotton t-shirt',
+    0.00,
+    50,  -- Quantity here
     'Blue',
     '{"size": "L", "material": "cotton"}'::jsonb,
     NOW(),
-    NOW(),
-    50
+    NOW()
 ),
 (
     uuid_generate_v4(),
     'Sneakers',
-    'High-quality running shoes', 75.00,
+    'High-quality running shoes', 
+    75.00,
+    30,  -- Quantity here
     'White',
     '{"size": "42", "brand": "Nike"}'::jsonb,
     NOW(),
-    NOW(),
-    30
+    NOW()
 ),
 (
     uuid_generate_v4(),
     'Backpack',
-    'Spacious and durable backpack', 45.50,
+    'Spacious and durable backpack', 
+    45.50,
+    20,  -- Quantity here
     'Black',
     '{"capacity": "20L", "waterproof": true}'::jsonb,
     NOW(),
-    NOW(),
-    20
+    NOW()
 ),
 (
     uuid_generate_v4(),
     'Wristwatch',
-    'Stylish analog wristwatch',0,
+    'Stylish analog wristwatch',
+    0.00,
+    15,  -- Quantity here
     'Silver',
     '{"brand": "Seiko", "water_resistant": true}'::jsonb,
     NOW(),
-    NOW(),
-    15
+    NOW()
 ),
 (
     uuid_generate_v4(),
     'Sunglasses',
     'UV protection sunglasses',
     30.00,
+    40,  -- Quantity here
     'Black',
     '{"polarized": true, "lens_color": "grey"}'::jsonb,
     NOW(),
-    NOW(),
-    40
+    NOW()
 );
-

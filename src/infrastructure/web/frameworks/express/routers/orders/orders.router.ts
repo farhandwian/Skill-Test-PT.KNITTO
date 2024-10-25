@@ -16,7 +16,10 @@ export default class OrdersRouter extends RouterMaker {
   private initRoutes(): void {
     this._router.get("/:id", this.makeRequestHandler(GetOrderByIdDeliverer));
 
-    this._router.get("/", this.makeRequestHandler(GetOrdersDeliverer));
+    this._router.get(
+      "/laporan/get-product-order-counts",
+      this.makeRequestHandler(GetOrdersDeliverer)
+    );
 
     this._router.post(
       "/",
