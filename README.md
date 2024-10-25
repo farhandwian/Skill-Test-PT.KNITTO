@@ -35,7 +35,7 @@ look postman documentation
 
 ```bash
 git clone
-cd Skill Test PT.Knitto
+cd Skill-Test-PT.KNITTO
 npm install
 ```
 
