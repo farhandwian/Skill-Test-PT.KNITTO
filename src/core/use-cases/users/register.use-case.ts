@@ -5,8 +5,6 @@ import { IUseCaseInputBoundary, IUseCaseOutputBoundary } from "../interfaces";
 import { Result } from "../../lib/result";
 import { User } from "../../entities";
 
-const JWT_SECRET = "your_jwt_secret";
-
 export default class RegisterUseCase implements IUseCaseInputBoundary {
   private usersRepository: IUsersGateway;
   private presenter: IUseCaseOutputBoundary;
@@ -44,7 +42,7 @@ export default class RegisterUseCase implements IUseCaseInputBoundary {
 
       const token = jwt.sign(
         { id: savedUser.id, username: savedUser.username },
-        JWT_SECRET,
+        process.env.JWT_SECRET || "secret",
         {
           expiresIn: "1h",
         }
