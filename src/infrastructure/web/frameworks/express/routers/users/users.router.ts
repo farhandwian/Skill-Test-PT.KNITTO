@@ -9,8 +9,8 @@ export default class UsersRouter extends RouterMaker {
   }
 
   private initRoutes(): void {
+    // endpoint untuk no 1 (Buat endpoint untuk mengelola autentifikasi dengan minimal 2 metode login)
     this._router.post("/login", this.makeRequestHandler(LoginDeliverer));
-
     this._router.post("/register", this.makeRequestHandler(RegisterDeliverer));
 
     // this._router.get("/:id", this.makeRequestHandler(GetUserByIdDeliverer));

@@ -15,11 +15,10 @@ export default class ProductsRouter extends RouterMaker {
   private initRoutes(): void {
     // this._router.get("/:id", this.makeRequestHandler(GetProductByIdDeliverer));
 
-    // this._router.get(
-    //   '/',
-    //   this.makeRequestHandler(GetProductsDeliverer)
-    // );
+    // endpoint untuk soal no 5 (Buat contoh backend yang mengelola proses penjadwalan sebuah task secara sederhana.)
+    this._router.get("/", this.makeRequestHandler(GetProductsDeliverer));
 
+    // endpoint untuk soal no 2 (Buat endpoint yang menyimpan data tertentu, data tersebut memiliki sebuah kode unik dan memiliki running number, buatkan juga penanganan ketika terjadi race condition)
     this._router.post("/", this.makeRequestHandler(AddProductDeliverer));
 
     // this._router.patch(

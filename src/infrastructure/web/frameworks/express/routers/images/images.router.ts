@@ -18,6 +18,7 @@ export default class ImagesRouter extends RouterMaker {
     //   this.makeRequestHandler(GetImageByIdDeliverer)
     // );
 
+    // enpoint untuk no 4 (Buat endpoint yang mengelola proses integrasi dengan API eksternal.)
     this._router.get("/", this.makeRequestHandler(GetImagesDeliverer));
 
     // this._router.post("/", this.makeRequestHandler(AddImageDeliverer));

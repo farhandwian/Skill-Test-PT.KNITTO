@@ -16,11 +16,13 @@ export default class OrdersRouter extends RouterMaker {
   private initRoutes(): void {
     // this._router.get("/:id", this.makeRequestHandler(GetOrderByIdDeliverer));
 
+    // ennpoint untuk soal no 7 (Buat endpoint yang mengembalikan sebuah data laporan, contoh kasusnya bisa menggunakan salah satu dari contoh di bawah ini atau contoh kasus yang ditentukan sendiri.)
     this._router.get(
       "/laporan/get-product-order-counts",
       this.makeRequestHandler(GetOrdersDeliverer)
     );
 
+    // endpoint untuk soal no 6 (Buat endpoint yang menggunakan transaction ketika mengeksekusi lebih dari 2 query.)
     this._router.post(
       "/",
       authenticate,
