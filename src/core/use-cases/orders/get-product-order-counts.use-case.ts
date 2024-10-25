@@ -6,7 +6,9 @@ import {
   IUseCaseOutputBoundary,
 } from "../interfaces";
 
-export default class GetOrdersUseCase implements IUseCaseInputBoundary {
+export default class GetProductOrderCountsUseCase
+  implements IUseCaseInputBoundary
+{
   private ordersRepository: IOrdersGateway;
   private presenter: IUseCaseOutputBoundary;
 

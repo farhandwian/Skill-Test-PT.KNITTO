@@ -1,9 +1,11 @@
-import { SuccessResponse } from '@common/contracts';
+import { SuccessResponse } from "@common/contracts";
 
-import { IUseCaseOutputBoundary } from '@core/use-cases/interfaces';
-import { IResponder } from '../../controllers/interfaces';
+import { IUseCaseOutputBoundary } from "@core/use-cases/interfaces";
+import { IResponder } from "../../controllers/interfaces";
 
-export default class GetOrdersPresenter implements IUseCaseOutputBoundary {
+export default class GetProductOrderCountsPresenter
+  implements IUseCaseOutputBoundary
+{
   private getOrdersResponder: IResponder;
 
   public constructor(getOrdersResponder: IResponder) {

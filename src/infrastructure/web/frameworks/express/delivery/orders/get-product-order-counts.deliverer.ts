@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
-import { GetOrdersController } from '@adapters/controllers/orders';
-import { OrdersRepositoryFactory } from '../../../../../database/repositories';
-import { OkResponder } from '../../../../responders/express/users';
+import { GetProductOrderCountsController } from "@adapters/controllers/orders";
+import { OrdersRepositoryFactory } from "../../../../../database/repositories";
+import { OkResponder } from "../../../../responders/express/users";
 
-import { Deliverer } from '../interfaces';
+import { Deliverer } from "../interfaces";
 
 export default class GetOrdersDeliverer extends Deliverer {
   public constructor(req: Request, res: Response, next: NextFunction) {
@@ -19,7 +19,7 @@ export default class GetOrdersDeliverer extends Deliverer {
 
     const okResponder = new OkResponder(this.res);
 
-    const getOrdersController = new GetOrdersController(
+    const getOrdersController = new GetProductOrderCountsController(
       ordersRepository,
       okResponder
     );
